@@ -126,6 +126,19 @@
       border: none;
       margin: 3rem 0;
     }
+
+    .reveal-left {
+      clip-path: inset(0 100% 0 0);
+    }
+
+    .reveal-left.revealed {
+      animation: wipe-left 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes wipe-left {
+      from { clip-path: inset(0 100% 0 0); }
+      to   { clip-path: inset(0 0% 0 0); }
+    }
   </style>
 </head>
 <body>
@@ -172,7 +185,7 @@
 <!-- ─── Teaser ────────────────────────────────────────────────────────────── -->
 <section class="section" style="padding-top: 0; padding-bottom: 2rem;">
   <div class="container is-max-desktop">
-    <figure class="image">
+    <figure class="image reveal-left">
       <img src="teaser_masked_tokenization.png" alt="Sparse2Act: masked tokenization and action regression pretraining">
     </figure>
     <p class="teaser-caption has-text-centered">
@@ -236,5 +249,17 @@
   </div>
 </footer>
 
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal-left').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
