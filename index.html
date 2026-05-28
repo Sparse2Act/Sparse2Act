@@ -129,15 +129,11 @@
 
     .reveal-left {
       clip-path: inset(0 100% 0 0);
+      transition: clip-path 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .reveal-left.revealed {
-      animation: wipe-left 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    }
-
-    @keyframes wipe-left {
-      from { clip-path: inset(0 100% 0 0); }
-      to   { clip-path: inset(0 0% 0 0); }
+      clip-path: inset(0 0% 0 0);
     }
   </style>
 </head>
@@ -253,7 +249,9 @@
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          entry.target.classList.add('revealed');
+        }));
         observer.unobserve(entry.target);
       }
     });
