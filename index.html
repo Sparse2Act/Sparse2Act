@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sparse2Act: Action-Aligned Pretraining for Sparse Point-Cloud Encoders</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    body {
+      font-family: 'Noto Sans', sans-serif;
+    }
+
+    .hero-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: #555;
+    }
+
+    .section-title {
+      font-family: 'Google Sans', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .publication-links a {
+      margin: 0.3rem;
+    }
+
+    .teaser-caption {
+      font-size: 0.95rem;
+      color: #555;
+      margin-top: 1rem;
+    }
+
+    .result-placeholder {
+      background: #f5f5f5;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 3rem 2rem;
+      text-align: center;
+      color: #999;
+      font-size: 1rem;
+    }
+
+    .result-placeholder .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .method-box {
+      background: #fafafa;
+      border-left: 4px solid #3273dc;
+      padding: 1.25rem 1.5rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1rem;
+    }
+
+    .result-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #3273dc;
+      font-family: 'Google Sans', sans-serif;
+    }
+
+    .result-label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .bibtex-box {
+      background: #2b2b2b;
+      color: #f8f8f2;
+      border-radius: 8px;
+      padding: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+
+    .anonymous-note {
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+      color: #795548;
+      margin-bottom: 2rem;
+    }
+
+    footer {
+      background: #fafafa;
+      border-top: 1px solid #eee;
+    }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+      background: #000;
+    }
+
+    .video-wrapper video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+    }
+
+    hr.section-divider {
+      background: #eee;
+      height: 1px;
+      border: none;
+      margin: 3rem 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ─── Hero / Title ─────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+
+          <h1 class="hero-title title">
+            Sparse2Act: Action-Aligned Pretraining<br>for Sparse Point-Cloud Encoders
+          </h1>
+
+          <div class="is-size-5 publication-authors" style="margin: 1.5rem 0;">
+            <!-- Authors hidden for double-blind review -->
+            <span class="author-block" style="color: #888; font-style: italic;">
+              Anonymous Authors
+            </span>
+          </div>
+
+          <div class="anonymous-note">
+            <strong>Double-Blind Review:</strong> Author information is withheld for the reviewing process.
+          </div>
+
+          <div class="publication-links">
+            <a class="button is-dark is-rounded" href="#" disabled>
+              <span class="icon"><i class="fas fa-file-pdf"></i></span>
+              <span>Paper</span>
+            </a>
+            <a class="button is-dark is-rounded" href="#" disabled>
+              <span class="icon"><i class="fab fa-github"></i></span>
+              <span>Code (coming soon)</span>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Teaser ────────────────────────────────────────────────────────────── -->
+<section class="section" style="padding-top: 0; padding-bottom: 2rem;">
+  <div class="container is-max-desktop">
+    <figure class="image">
+      <img src="teaser_masked_tokenization.png" alt="Sparse2Act: masked tokenization and action regression pretraining">
+    </figure>
+    <p class="teaser-caption has-text-centered">
+      <strong>Sparse2Act</strong> groups a point cloud into local sparse 3D tokens, masks a subset,
+      and pretrains the encoder to regress the demonstrated action from visible tokens.
+      The regression head is discarded after pretraining; only the encoder initializes downstream policies.
+    </p>
+  </div>
+</section>
+
+<hr class="section-divider" style="max-width: 960px; margin: 0 auto 3rem;">
+
+<!-- ─── Abstract ─────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-title title has-text-centered">Abstract</h2>
+    <div class="content has-text-justified" style="font-size: 1.05rem; line-height: 1.8;">
+      <p>
+        Sparse 3D manipulation policies represent object geometry, spatial relations, and end-effector
+        motion in a shared metric workspace. This structure suggests a simple pretraining signal:
+        the demonstrated action should be inferable from the current 3D geometry.
+      </p>
+      <p>
+        We introduce <strong>Sparse2Act</strong>, an action-aligned pretraining framework for sparse
+        point-cloud encoders. Sparse2Act groups each point cloud into local sparse 3D tokens, masks a
+        subset of tokens, and trains the encoder to regress the demonstrated action from the remaining
+        visible tokens. After pretraining, the lightweight regression head is discarded, and only the
+        pretrained encoder is used to initialize downstream policies, allowing downstream control to
+        operate in its preferred action space.
+      </p>
+      <p>
+        In simulated manipulation benchmarks, our pretraining enables downstream diffusion policies to
+        achieve <strong>86.9%</strong> average success rates on LIBERO-10 after 500 fine-tuning steps,
+        and the same pretrained encoder transfers to Meta-World-5 with <strong>73.4%</strong> average
+        success rates. We further demonstrate sim-to-real deployment by pretraining the encoder on
+        simulated workspace actions and fine-tuning with a small set of real-robot joint-space
+        demonstrations. These results show that our method provides a simple and effective pretraining
+        signal for learning control-relevant sparse 3D representations for robot manipulation.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" style="max-width: 960px; margin: 0 auto 3rem;">
+
+<!-- ─── Method ────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-title title has-text-centered">Method</h2>
+
+    <div class="columns is-multiline">
+      <div class="column is-12">
+        <div class="method-box">
+          <strong>Step 1 — Sparse Tokenization:</strong>
+          Input point clouds are grouped into local sparse 3D tokens in a shared metric workspace,
+          capturing object geometry and spatial relations.
+        </div>
+        <div class="method-box">
+          <strong>Step 2 — Masked Pretraining:</strong>
+          A subset of tokens is masked. The encoder processes the visible tokens and a lightweight
+          regression head predicts the demonstrated end-effector action.
+        </div>
+        <div class="method-box">
+          <strong>Step 3 — Policy Fine-tuning:</strong>
+          The regression head is discarded. The pretrained encoder initializes downstream diffusion
+          policies, which operate in their preferred action space (e.g., joint space for real-robot demos).
+        </div>
+      </div>
+    </div>
+
+    <!-- Placeholder for method figure -->
+    <div class="result-placeholder" style="margin-top: 1.5rem;">
+      <span class="icon"><i class="fas fa-image"></i></span>
+      Method overview figure — coming soon
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider" style="max-width: 960px; margin: 0 auto 3rem;">
+
+<!-- ─── Key Results ────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-title title has-text-centered">Key Results</h2>
+
+    <div class="columns has-text-centered" style="margin-bottom: 2rem;">
+      <div class="column">
+        <div class="result-number">86.9%</div>
+        <div class="result-label">Avg. success on <strong>LIBERO-10</strong><br>(500 fine-tuning steps)</div>
+      </div>
+      <div class="column">
+        <div class="result-number">73.4%</div>
+        <div class="result-label">Avg. success on <strong>Meta-World-5</strong><br>(zero-shot encoder transfer)</div>
+      </div>
+      <div class="column">
+        <div class="result-number">Sim→Real</div>
+        <div class="result-label">Encoder pretrained on sim,<br>fine-tuned on real-robot demos</div>
+      </div>
+    </div>
+
+    <!-- Placeholder for results table -->
+    <div class="result-placeholder">
+      <span class="icon"><i class="fas fa-table"></i></span>
+      Full results table — coming soon
+    </div>
+
+  </div>
+</section>
+
+<hr class="section-divider" style="max-width: 960px; margin: 0 auto 3rem;">
+
+<!-- ─── Videos ────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-title title has-text-centered">Demonstrations</h2>
+
+    <div class="columns is-multiline">
+
+      <!-- LIBERO-10 placeholder -->
+      <div class="column is-6">
+        <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">LIBERO-10</p>
+        <div class="result-placeholder" style="padding: 4rem 1rem;">
+          <span class="icon"><i class="fas fa-video"></i></span>
+          Video coming soon
+        </div>
+      </div>
+
+      <!-- Meta-World-5 placeholder -->
+      <div class="column is-6">
+        <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Meta-World-5</p>
+        <div class="result-placeholder" style="padding: 4rem 1rem;">
+          <span class="icon"><i class="fas fa-video"></i></span>
+          Video coming soon
+        </div>
+      </div>
+
+      <!-- Real-robot placeholder -->
+      <div class="column is-12">
+        <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Real-Robot Deployment (Sim-to-Real)</p>
+        <div class="result-placeholder" style="padding: 4rem 1rem;">
+          <span class="icon"><i class="fas fa-robot"></i></span>
+          Real-robot video coming soon
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<hr class="section-divider" style="max-width: 960px; margin: 0 auto 3rem;">
+
+<!-- ─── BibTeX ─────────────────────────────────────────────────────────────── -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <h2 class="section-title title has-text-centered">BibTeX</h2>
+    <div class="bibtex-box">
+@article{sparse2act2025,<br>
+&nbsp;&nbsp;title   = {Sparse2Act: Action-Aligned Pretraining for Sparse Point-Cloud Encoders},<br>
+&nbsp;&nbsp;author  = {Anonymous},<br>
+&nbsp;&nbsp;journal = {Conference on Robot Learning (CoRL)},<br>
+&nbsp;&nbsp;year    = {2025},<br>
+}
+    </div>
+  </div>
+</section>
+
+<!-- ─── Footer ────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="content has-text-centered">
+    <p style="color: #aaa; font-size: 0.85rem;">
+      Website template adapted from
+      <a href="https://nerfies.github.io" style="color: #888;">Nerfies</a>.
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
