@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: #fff; color-scheme: only light;">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sparse2Act: Learning Action-Aligned Sparse 3D Representations for Cross-Domain Robot Manipulation.">
+  <meta name="color-scheme" content="only light">
+  <meta name="theme-color" content="#ffffff">
+  <title>Sparse2Act</title>
+
+  <style>
+    html,
+    body {
+      margin: 0;
+      color-scheme: only light;
+      background-color: #fff;
+    }
+
+    .opening-stage {
+      background-color: #fff;
+    }
+  </style>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --font-body: "Noto Sans", sans-serif;
+      --font-heading: "Google Sans", sans-serif;
+      --text-sm: 0.9rem;
+      --text-base: 1rem;
+      --text-emphasis: 1.08rem;
+      --title-section: 1.45rem;
+      --title-paper: 1.65rem;
+      --title-brand: 2.35rem;
+    }
+
+    body {
+      min-height: 100vh;
+      color: #222;
+      background-color: #fff;
+      font-family: var(--font-body);
+    }
+
+    .publication-short-title {
+      margin-bottom: 0.35rem;
+      color: #5b4a8b;
+      font-family: var(--font-heading);
+      font-size: var(--title-brand);
+      font-weight: 650;
+      letter-spacing: 0;
+      line-height: 1.15;
+    }
+
+    .publication-full-title {
+      max-width: 900px;
+      margin: 0 auto;
+      font-family: var(--font-heading);
+      font-size: var(--title-paper);
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .publication-authors {
+      margin-top: 0.85rem;
+      font-size: var(--text-base);
+    }
+
+    .publication-links {
+      margin-top: 0.9rem;
+    }
+
+    .publication-hero .hero-body {
+      padding-top: 2rem;
+      padding-bottom: 0.8rem;
+    }
+
+    .publication-links .button {
+      margin: 0.2rem;
+      height: auto;
+      padding: 0.48rem 0.9rem;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      color: #444;
+      background: #fff;
+      box-shadow: none;
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .publication-links .button:hover {
+      border-color: #555;
+      color: #444;
+      background: #fff;
+    }
+
+    .section {
+      padding-top: 2.75rem;
+      padding-bottom: 2.75rem;
+    }
+
+    .opening-section {
+      padding-top: 0;
+      padding-bottom: 1.05rem;
+    }
+
+    .section-title,
+    .subsection-title {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .section-title {
+      margin-bottom: 1.25rem;
+      font-size: var(--title-section);
+      line-height: 1.3;
+    }
+
+    .subsection-title {
+      margin: 2.1rem 0 0.95rem;
+      font-size: var(--text-emphasis);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .content {
+      font-size: var(--text-base);
+      line-height: 1.65;
+    }
+
+    .abstract-content {
+      max-width: none;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .section-intro {
+      max-width: none;
+      margin: -0.5rem auto 1.75rem;
+      color: #555;
+      text-align: center;
+    }
+
+    .takeaway {
+      max-width: none;
+      margin: 1.75rem auto 0;
+      font-family: var(--font-heading);
+      font-size: var(--text-emphasis);
+      font-weight: 600;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .simulation-takeaway {
+      font-size: var(--text-emphasis);
+    }
+
+    .site-footer {
+      padding: 2.25rem 1.5rem;
+      border-top: 1px solid #eee;
+      color: #777;
+      background: #fafafa;
+      font-size: var(--text-sm);
+      line-height: 1.6;
+    }
+
+    .site-footer a {
+      color: #5b4a8b;
+    }
+
+    .media-shell {
+      position: relative;
+      display: flex;
+      min-height: 360px;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid #ddd;
+      background: #f7f7f7;
+    }
+
+    .media-shell.is-wide {
+      min-height: 420px;
+    }
+
+    .media-shell.is-video {
+      min-height: 420px;
+      border: 0;
+      color: #777;
+      background: #fff;
+    }
+
+    .media-shell.is-compact {
+      min-height: 240px;
+    }
+
+    .media-shell img,
+    .media-shell video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .media-shell video {
+      background: #fff;
+    }
+
+    .opening-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 5;
+      overflow: hidden;
+      background-color: #fff;
+    }
+
+    .opening-video {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      object-fit: cover;
+      opacity: 1;
+      transform: scale(1.35);
+      transform-origin: center;
+      transition: opacity 280ms ease;
+    }
+
+    .opening-section .takeaway {
+      margin-top: 0.75rem;
+      line-height: 1.35;
+    }
+
+    .opening-video.is-hidden {
+      opacity: 0;
+    }
+
+    .media-placeholder {
+      padding: 1.5rem;
+      color: #777;
+      text-align: center;
+    }
+
+    .media-shell.is-video .media-placeholder {
+      color: #777;
+    }
+
+    .placeholder-icon {
+      display: block;
+      margin-bottom: 0.65rem;
+      font-size: var(--title-section);
+    }
+
+    .figure-caption {
+      margin-top: 0.75rem;
+      color: #555;
+      font-size: var(--text-sm);
+      line-height: 1.55;
+      text-align: left;
+    }
+
+    .figure-caption strong {
+      color: #333;
+    }
+
+    .framework-overview {
+      margin-top: 1.6rem;
+    }
+
+    .framework-overview img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #fff;
+    }
+
+    .task-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .task-tabs {
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-button {
+      padding: 0.48rem 0.9rem;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      color: #444;
+      background: #fff;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: var(--text-sm);
+      font-weight: 600;
+    }
+
+    .tab-button:hover {
+      border-color: #555;
+    }
+
+    .tab-button.is-selected {
+      color: #fff;
+      border-color: #333;
+      background: #333;
+    }
+
+    .pointcloud-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+
+    .additional-video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem;
+    }
+
+    .additional-video-note {
+      margin: -0.55rem 0 1rem;
+      color: #666;
+      font-size: var(--text-sm);
+      text-align: center;
+    }
+
+    .additional-video-grid .media-shell {
+      min-height: 260px;
+    }
+
+    .simulation-results {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .result-panel-title {
+      margin-bottom: 0.65rem;
+      font-family: var(--font-heading);
+      font-size: var(--text-emphasis);
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .chart-frame {
+      border: 1px solid #ddd;
+      background: #fff;
+    }
+
+    .result-chart {
+      display: block;
+      width: 100%;
+      height: auto;
+      overflow: visible;
+    }
+
+    .result-chart text {
+      fill: #222;
+      font-family: var(--font-body);
+    }
+
+    .result-chart .grid-line {
+      stroke: #ddd;
+      stroke-width: 1;
+    }
+
+    .result-chart .axis-label,
+    .result-chart .tick-label {
+      fill: #555;
+      font-size: 14px;
+    }
+
+    .result-chart .method-label {
+      font-size: 14px;
+    }
+
+    .result-chart .bar-value {
+      font-size: 15px;
+      font-weight: 600;
+      opacity: 0;
+    }
+
+    .result-chart .result-bar {
+      transform: scaleY(0);
+      transform-box: fill-box;
+      transform-origin: center bottom;
+    }
+
+    .result-chart.is-animated .result-bar {
+      animation: grow-bar 850ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      animation-delay: var(--delay);
+    }
+
+    .result-chart.is-animated .bar-value {
+      animation: show-value 260ms ease forwards;
+      animation-delay: calc(var(--delay) + 650ms);
+    }
+
+    @keyframes grow-bar {
+      to {
+        transform: scaleY(1);
+      }
+    }
+
+    @keyframes show-value {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .result-chart .result-bar {
+        transform: scaleY(1);
+      }
+
+      .result-chart .bar-value {
+        opacity: 1;
+      }
+    }
+
+    .pointcloud-panel {
+      position: relative;
+    }
+
+    .pointcloud-label {
+      margin-bottom: 0.45rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .pointcloud-canvas {
+      min-height: 260px;
+      cursor: grab;
+    }
+
+    .pointcloud-canvas:active {
+      cursor: grabbing;
+    }
+
+    .viewer-controls {
+      position: absolute;
+      right: 0.55rem;
+      bottom: 0.55rem;
+      z-index: 2;
+    }
+
+    .reset-view {
+      padding: 0.32rem 0.55rem;
+      border: 1px solid #bbb;
+      border-radius: 3px;
+      color: #555;
+      background: rgba(255, 255, 255, 0.9);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+      .publication-short-title {
+        font-size: 2rem;
+      }
+
+      .publication-full-title {
+        font-size: 1.35rem;
+      }
+
+      .publication-authors {
+        font-size: var(--text-base);
+      }
+
+      .publication-hero .hero-body {
+        padding-top: 1.45rem;
+        padding-bottom: 0.65rem;
+      }
+
+      .section {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+      }
+
+      .opening-section {
+        padding-top: 0;
+        padding-bottom: 0.9rem;
+      }
+
+      .opening-stage {
+        aspect-ratio: 16 / 8;
+      }
+
+      .opening-section .takeaway {
+        font-size: var(--text-base);
+      }
+
+      .media-shell,
+      .media-shell.is-wide,
+      .media-shell.is-video {
+        min-height: 260px;
+      }
+
+      .pointcloud-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .additional-video-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .simulation-results {
+        grid-template-columns: 1fr;
+      }
+
+    }
+  </style>
+</head>
+<body style="margin: 0; background-color: #fff;">
+  <section class="hero publication-hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title publication-short-title">Sparse2Act</h1>
+            <p class="publication-full-title">
+              Learning Action-Aligned Sparse 3D Representations for
+              Cross-Domain Robot Manipulation
+            </p>
+
+            <div class="publication-authors">
+              <span class="author-block">Anonymous</span>
+            </div>
+
+            <div class="publication-links">
+              <span class="button">
+                <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                <span>Paper</span>
+              </span>
+              <a class="button" href="#method-video">
+                <span class="icon"><i class="fas fa-video"></i></span>
+                <span>Videos</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section opening-section">
+    <div class="container is-max-desktop">
+      <div class="opening-stage">
+        <video
+          class="opening-video"
+          id="opening-video-a"
+          src="assets/videos/opening/frame-01.mp4"
+          autoplay
+          muted
+          playsinline
+          preload="auto"
+        ></video>
+        <video
+          class="opening-video is-hidden"
+          id="opening-video-b"
+          muted
+          playsinline
+          preload="auto"
+        ></video>
+      </div>
+      <p class="takeaway simulation-takeaway">
+        Sparse2Act uses task-space actions as geometric supervision for a
+        masked point-cloud encoder, then reuses only the encoder initialization
+        for downstream policies.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title section-title">Abstract</h2>
+      <div class="content has-text-justified abstract-content">
+        <p>
+          Sparse 3D manipulation policies represent object geometry, spatial
+          relations, and end-effector motion in a shared metric workspace. This
+          structure suggests a simple pretraining signal: the demonstrated action
+          should be inferable from the current 3D geometry. We introduce
+          <strong>Sparse2Act</strong>, an action-aligned pretraining framework for
+          sparse point-cloud encoders. Sparse2Act groups each point cloud into local
+          sparse 3D tokens, masks a subset of tokens, and trains the encoder to
+          regress the demonstrated action from the remaining visible tokens. After
+          pretraining, the lightweight regression head is discarded, and only the
+          pretrained encoder is used to initialize downstream policies, allowing
+          downstream control to operate in its preferred action space. In simulated
+          manipulation benchmarks, our pretraining enables downstream diffusion
+          policies to achieve <strong>86.9%</strong> average success rates on
+          LIBERO-10 after 500 fine-tuning steps, and the same pretrained encoder
+          transfers to Meta-World-5 with <strong>73.4%</strong> average success
+          rates. We further demonstrate sim-to-real deployment by pretraining the
+          encoder on simulated workspace actions and fine-tuning with a small set of
+          real-robot joint-space demonstrations. These results show that our method
+          provides a simple and effective pretraining signal for learning
+          control-relevant sparse 3D representations for robot manipulation.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="method-video">
+    <div class="container is-max-desktop">
+      <h2 class="title section-title">Project Overview Video</h2>
+      <div class="media-shell is-wide is-video">
+        <video controls playsinline preload="metadata">
+          <source src="assets/videos/project-overview.mp4" type="video/mp4">
+          Your browser does not support the video element.
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title section-title">Method Overview</h2>
+      <figure class="framework-overview">
+        <img
+          src="assets/images/framework-overview.png"
+          alt="Sparse2Act framework overview showing sparse 3D token construction, masked action-aligned pretraining, and downstream policy initialization."
+        >
+        <figcaption class="figure-caption">
+          <strong>Framework overview.</strong> Sparse2Act converts raw point
+          clouds into local sparse 3D tokens, encodes the visible tokens with 3D
+          positional structure, and pretrains the encoder to predict task-space
+          alignment actions from masked observations. After pretraining, only the
+          encoder initialization is reused by downstream policies, allowing each
+          policy to keep its own action parameterization.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container is-max-desktop">
+      <h2 class="title section-title">Simulation Results</h2>
+
+      <div class="simulation-results">
+        <div>
+          <h3 class="result-panel-title">In-Domain Adaptation</h3>
+          <div class="chart-frame">
+            <svg class="result-chart" viewBox="0 0 640 460" role="img" aria-labelledby="libero-chart-title libero-chart-desc">
+              <title id="libero-chart-title">In-domain adaptation on LIBERO-10</title>
+              <desc id="libero-chart-desc">Success rates: DP3 29.1, DP 50.5, SpatialVLA 55.5, pi zero 85.2, and Sparse2Act 86.9 percent.</desc>
+
+              <line class="grid-line" x1="72" y1="380" x2="620" y2="380"></line>
+              <line class="grid-line" x1="72" y1="295" x2="620" y2="295"></line>
+              <line class="grid-line" x1="72" y1="210" x2="620" y2="210"></line>
+              <line class="grid-line" x1="72" y1="125" x2="620" y2="125"></line>
+              <line class="grid-line" x1="72" y1="40" x2="620" y2="40"></line>
+
+              <text class="tick-label" x="60" y="385" text-anchor="end">0</text>
+              <text class="tick-label" x="60" y="300" text-anchor="end">25</text>
+              <text class="tick-label" x="60" y="215" text-anchor="end">50</text>
+              <text class="tick-label" x="60" y="130" text-anchor="end">75</text>
+              <text class="tick-label" x="60" y="45" text-anchor="end">100</text>
+              <text class="axis-label" transform="translate(20 210) rotate(-90)" text-anchor="middle">Success Rate (%)</text>
+
+              <rect class="result-bar" style="--delay: 0ms" x="92" y="281.1" width="74" height="98.9" fill="#ACACBE" stroke="#868696" stroke-width="1.5"></rect>
+              <rect class="result-bar" style="--delay: 110ms" x="201" y="208.3" width="74" height="171.7" fill="#8888C0" stroke="#6a6a96" stroke-width="1.5"></rect>
+              <rect class="result-bar" style="--delay: 220ms" x="310" y="191.3" width="74" height="188.7" fill="#B0B0D8" stroke="#8989a8" stroke-width="1.5"></rect>
+              <rect class="result-bar" style="--delay: 330ms" x="419" y="90.3" width="74" height="289.7" fill="#72B472" stroke="#588c58" stroke-width="1.5"></rect>
+              <rect class="result-bar" style="--delay: 440ms" x="528" y="84.5" width="74" height="295.5" fill="#F0C040" stroke="#bb9532" stroke-width="1.5"></rect>
+
+              <text class="bar-value" style="--delay: 0ms" x="129" y="270" text-anchor="middle">29.1</text>
+              <text class="bar-value" style="--delay: 110ms" x="238" y="197" text-anchor="middle">50.5</text>
+              <text class="bar-value" style="--delay: 220ms" x="347" y="180" text-anchor="middle">55.5</text>
+              <text class="bar-value" style="--delay: 330ms" x="456" y="79" text-anchor="middle">85.2</text>
+              <text class="bar-value" style="--delay: 440ms" x="565" y="73" text-anchor="middle">86.9</text>
+
+              <text class="method-label" x="129" y="415" text-anchor="middle">DP3</text>
+              <text class="method-label" x="238" y="415" text-anchor="middle">DP</text>
+              <text class="method-label" x="347" y="415" text-anchor="middle">SpatialVLA</text>
+              <text class="method-label" x="456" y="415" text-anchor="middle">π₀</text>
+              <text class="method-label" x="565" y="415" text-anchor="middle">Ours</text>
+            </svg>
+          </div>
+          <p class="figure-caption">
+            <strong>LIBERO-10.</strong>
+            Sparse2Act reaches 86.9% average success after 500 fine-tuning steps.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="result-panel-title">Cross-Domain Transfer</h3>
+          <div class="chart-frame">
+            <svg class="result-chart" viewBox="0 0 640 460" role="img" aria-labelledby="metaworld-chart-title metaworld-chart-desc">
+              <title id="metaworld-chart-title">Cross-domain transfer to Meta-World-5</title>
+              <desc id="metaworld-chart-desc">Success rates: FVP 28.4, DP3 42.4, AFRO 48.8, LIBERO pretraining 73.4, and Meta-World pretraining 85.6 percent.</desc>
+
+              <line class="grid-line" x1="72" y1="380" x2="620" y2="380"></line>
+              <line class="grid-line" x1="72" y1="295" x2="620" y2="295"></line>
+              <line class="grid-line" x1="72" y1="210" x2="620" y2="210"></line>
+              <line class="grid-line" x1="72" y1="125" x2="620" y2="125"></line>
+              <line class="grid-line" x1="72" y1="40" x2="620" y2="40"></line>
+
+              <text class="tick-label" x="60" y="385" text-anchor="end">0</text>
+              <text class="tick-label" x="60" y="300" text-anchor="end">25</text>
+              <text class="tick-label" x="60" y="215" text-anchor="end">50</text>
+              <text class="tick-label" x="60" y="130" text-anchor="end">75</text>
+              <text class="tick-label" x="60" y="45" text-anchor="end">100</text>
+              <text class="axis-label" transform="translate(20 210) rotate(-90)" text-anchor="middle">Success Rate (%)</text>
+
+              <rect class="result-bar" style="--delay: 0ms" x="92" y="283.4" width="74" height="96.6" fill="#B0B0D8" stroke="#8989a8" stroke-width="1.5"></rect>
+              <rect class="result-bar" style="--delay: 110ms" x="201" y="235.8" width="74" height="144.2" fill="#ACACBE" stroke="#868696" stroke-width="1.5"></rect>
+              <rect class="result-bar" style="--delay: 220ms" x="310" y="214.1" width="74" height="165.9" fill="#8888C0" stroke="#6a6a96" stroke-width="1.5"></rect>
+              <rect class="result-bar" style="--delay: 330ms" x="419" y="130.4" width="74" height="249.6" fill="#5A9E5A" stroke="#467b46" stroke-width="1.5"></rect>
+              <rect class="result-bar" style="--delay: 440ms" x="528" y="88.9" width="74" height="291.1" fill="#F0C040" stroke="#bb9532" stroke-width="1.5"></rect>
+
+              <text class="bar-value" style="--delay: 0ms" x="129" y="272" text-anchor="middle">28.4</text>
+              <text class="bar-value" style="--delay: 110ms" x="238" y="224" text-anchor="middle">42.4</text>
+              <text class="bar-value" style="--delay: 220ms" x="347" y="202" text-anchor="middle">48.8</text>
+              <text class="bar-value" style="--delay: 330ms" x="456" y="119" text-anchor="middle">73.4</text>
+              <text class="bar-value" style="--delay: 440ms" x="565" y="77" text-anchor="middle">85.6</text>
+
+              <text class="method-label" x="129" y="415" text-anchor="middle">FVP</text>
+              <text class="method-label" x="238" y="415" text-anchor="middle">DP3</text>
+              <text class="method-label" x="347" y="415" text-anchor="middle">AFRO</text>
+              <text class="method-label" x="456" y="408" text-anchor="middle">
+                <tspan x="456">LIBERO</tspan>
+                <tspan x="456" dy="18">pretrain</tspan>
+              </text>
+              <text class="method-label" x="565" y="408" text-anchor="middle">
+                <tspan x="565">MW</tspan>
+                <tspan x="565" dy="18">pretrain</tspan>
+              </text>
+            </svg>
+          </div>
+          <p class="figure-caption">
+            <strong>LIBERO to Meta-World-5.</strong>
+            The transferred encoder reaches 73.4% average success.
+          </p>
+        </div>
+      </div>
+
+      <p class="takeaway simulation-takeaway">
+        Action-aligned pretraining provides a strong in-domain initialization
+        while preserving substantial performance under cross-domain transfer.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="sim-to-real">
+    <div class="container is-max-desktop">
+      <h2 class="title section-title">Sim-to-Real Transfer</h2>
+
+      <h3 class="subsection-title">Comparison with DP3</h3>
+      <div class="media-shell is-video">
+        <video controls playsinline preload="metadata">
+          <source src="assets/videos/sim-to-real-comparison.mp4" type="video/mp4">
+          Your browser does not support the video element.
+        </video>
+      </div>
+
+      <h3 class="subsection-title">Real-Robot Tasks</h3>
+      <div class="task-tabs" id="task-tabs" aria-label="Real-robot tasks"></div>
+
+      <h3 class="subsection-title">Simulation and Real Observations</h3>
+      <div class="pointcloud-grid">
+        <div class="pointcloud-panel">
+          <div class="pointcloud-label">Simulation point cloud</div>
+          <div class="media-shell is-compact pointcloud-canvas" id="sim-pointcloud">
+            <div class="media-placeholder">
+              <i class="fas fa-cube placeholder-icon"></i>
+              Loading...
+            </div>
+          </div>
+          <div class="viewer-controls">
+            <button class="reset-view" type="button" data-reset-view="sim">
+              <i class="fas fa-rotate-left"></i> Reset view
+            </button>
+          </div>
+        </div>
+        <div class="pointcloud-panel">
+          <div class="pointcloud-label">Real point cloud</div>
+          <div class="media-shell is-compact pointcloud-canvas" id="real-pointcloud">
+            <div class="media-placeholder">
+              <i class="fas fa-cube placeholder-icon"></i>
+              Loading...
+            </div>
+          </div>
+          <div class="viewer-controls">
+            <button class="reset-view" type="button" data-reset-view="real">
+              <i class="fas fa-rotate-left"></i> Reset view
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <h3 class="subsection-title">Additional Videos</h3>
+      <p class="additional-video-note">All videos are shown at 4&times; speed.</p>
+      <div class="additional-video-grid" id="additional-video-grid"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="content has-text-centered">
+      <p>
+        Website design adapted from the
+        <a href="https://nerfies.github.io" target="_blank" rel="noopener">Nerfies</a>
+        project page.
+      </p>
+    </div>
+  </footer>
+
+  <script type="module">
+    const TASKS = {
+      "bin-picking": {
+        label: "Bin Picking",
+        pointclouds: {
+          sim: "assets/pointclouds/bin-picking/sim.ply",
+          real: "assets/pointclouds/bin-picking/real.ply",
+        },
+        videos: {
+          trial1: "assets/videos/bin-picking/trial-01.mp4",
+          trial2: "assets/videos/bin-picking/trial-02.mp4",
+          trial3: "assets/videos/bin-picking/trial-03.mp4",
+          trial4: "assets/videos/bin-picking/trial-04.mp4",
+        },
+      },
+      "mug-plate": {
+        label: "Mug & Plate",
+        pointclouds: {
+          sim: "assets/pointclouds/mug-plate/sim.ply",
+          real: "assets/pointclouds/mug-plate/real.ply",
+        },
+        videos: {
+          trial1: "assets/videos/mug-plate/trial-01.mp4",
+          trial2: "assets/videos/mug-plate/trial-02.mp4",
+          trial3: "assets/videos/mug-plate/trial-03.mp4",
+          trial4: "assets/videos/mug-plate/trial-04.mp4",
+        },
+      },
+      "mug-toy": {
+        label: "Mug & Toy",
+        pointclouds: {
+          sim: "assets/pointclouds/mug-toy/sim.ply",
+          real: "assets/pointclouds/mug-toy/real.ply",
+        },
+        videos: {
+          trial1: "assets/videos/mug-toy/trial-01.mp4",
+          trial2: "assets/videos/mug-toy/trial-02.mp4",
+          trial3: "assets/videos/mug-toy/trial-03.mp4",
+          trial4: "assets/videos/mug-toy/trial-04.mp4",
+        },
+      },
+      "cube-stacking": {
+        label: "Cube Stacking",
+        pointclouds: {
+          sim: "assets/pointclouds/cube-stacking/sim.ply",
+          real: "assets/pointclouds/cube-stacking/real.ply",
+        },
+        videos: {
+          trial1: "assets/videos/cube-stacking/trial-01.mp4",
+          trial2: "assets/videos/cube-stacking/trial-02.mp4",
+          trial3: "assets/videos/cube-stacking/trial-03.mp4",
+          trial4: "assets/videos/cube-stacking/trial-04.mp4",
+        },
+      },
+    };
+
+    const VIDEO_OPTIONS = ["trial1", "trial2", "trial3", "trial4"];
+
+    const OPENING_VIDEOS = [
+      "assets/videos/opening/frame-01.mp4",
+      "assets/videos/opening/frame-02.mp4",
+      "assets/videos/opening/frame-03.mp4",
+      "assets/videos/opening/frame-04.mp4",
+    ];
+
+    const taskTabs = document.getElementById("task-tabs");
+    const additionalVideoGrid = document.getElementById("additional-video-grid");
+    const pointcloudContainers = {
+      sim: document.getElementById("sim-pointcloud"),
+      real: document.getElementById("real-pointcloud"),
+    };
+
+    let activeTask = "bin-picking";
+    let activeOpeningVideo = 0;
+    let activeOpeningPlayer = 0;
+    let openingSwitchPending = false;
+    const pointcloudScenes = { sim: null, real: null };
+    const pointcloudRequests = { sim: 0, real: 0 };
+    const availabilityCache = new Map();
+    const videoRequests = new WeakMap();
+    const POINT_SIZE_SCALE = 0.06;
+    const MIN_POINT_SIZE = 0.02;
+
+    function placeholder(icon, title) {
+      return `
+        <div class="media-placeholder">
+          <i class="${icon} placeholder-icon"></i>
+          ${title}
+        </div>
+      `;
+    }
+
+    function queueNextOpeningVideo() {
+      if (openingSwitchPending) return;
+      openingSwitchPending = true;
+
+      const players = [
+        document.getElementById("opening-video-a"),
+        document.getElementById("opening-video-b"),
+      ];
+      const currentPlayer = players[activeOpeningPlayer];
+      const nextPlayerIndex = activeOpeningPlayer === 0 ? 1 : 0;
+      const nextPlayer = players[nextPlayerIndex];
+      const nextVideoIndex = (activeOpeningVideo + 1) % OPENING_VIDEOS.length;
+
+      const revealNext = () => {
+        nextPlayer.removeEventListener("canplay", revealNext);
+        nextPlayer.play().catch(() => {});
+        requestAnimationFrame(() => {
+          nextPlayer.classList.remove("is-hidden");
+          currentPlayer.classList.add("is-hidden");
+        });
+        window.setTimeout(() => {
+          currentPlayer.pause();
+          currentPlayer.removeAttribute("src");
+          currentPlayer.load();
+          activeOpeningPlayer = nextPlayerIndex;
+          activeOpeningVideo = nextVideoIndex;
+          openingSwitchPending = false;
+        }, 300);
+      };
+
+      nextPlayer.addEventListener("canplay", revealNext);
+      nextPlayer.src = OPENING_VIDEOS[nextVideoIndex];
+      nextPlayer.load();
+    }
+
+    async function assetExists(path) {
+      if (!path) return false;
+      if (availabilityCache.has(path)) return availabilityCache.get(path);
+
+      const request = fetch(path, { method: "HEAD", cache: "no-store" })
+        .then((response) => response.ok)
+        .catch(() => false);
+      availabilityCache.set(path, request);
+      return request;
+    }
+
+    function animateResultCharts() {
+      const charts = document.querySelectorAll(".result-chart");
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-animated");
+          observer.unobserve(entry.target);
+        });
+      }, { threshold: 0.35 });
+
+      charts.forEach((chart) => observer.observe(chart));
+    }
+
+    function renderTaskTabs() {
+      taskTabs.replaceChildren();
+      Object.entries(TASKS).forEach(([taskId, task]) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = `tab-button${taskId === activeTask ? " is-selected" : ""}`;
+        button.textContent = task.label;
+        button.setAttribute("aria-pressed", String(taskId === activeTask));
+        button.addEventListener("click", () => selectTask(taskId));
+        taskTabs.appendChild(button);
+      });
+    }
+
+    async function renderVideo(shell, path, label, options = {}) {
+      const requestId = Symbol(path);
+      videoRequests.set(shell, requestId);
+      shell.replaceChildren();
+      if (!(await assetExists(path))) {
+        if (videoRequests.get(shell) !== requestId) return;
+        shell.innerHTML = placeholder(
+          options.comparison ? "fas fa-columns" : "fas fa-play-circle",
+          `${label} unavailable`,
+        );
+        return;
+      }
+
+      if (videoRequests.get(shell) !== requestId) return;
+      const video = document.createElement("video");
+      video.src = path;
+      video.controls = true;
+      video.muted = Boolean(options.muted);
+      video.loop = Boolean(options.loop);
+      video.playsInline = true;
+      video.preload = "metadata";
+      const posterPath = path.replace(/\.mp4$/i, ".jpg");
+      if (await assetExists(posterPath)) video.poster = posterPath;
+      if (videoRequests.get(shell) !== requestId) return;
+      shell.replaceChildren(video);
+      if (options.autoplay) video.play().catch(() => {});
+    }
+
+    function renderAdditionalVideos() {
+      const task = TASKS[activeTask];
+      additionalVideoGrid.replaceChildren();
+
+      VIDEO_OPTIONS.forEach((videoId, index) => {
+        const item = document.createElement("article");
+        const shell = document.createElement("div");
+        shell.className = "media-shell is-video";
+        item.appendChild(shell);
+        additionalVideoGrid.appendChild(item);
+        renderVideo(shell, task.videos[videoId], `${task.label} trial ${index + 1}`, {
+          muted: true,
+        });
+      });
+    }
+
+    function disposePointcloud(side) {
+      const state = pointcloudScenes[side];
+      if (!state) return;
+      state.stop();
+      state.observer.disconnect();
+      state.controls.dispose();
+      state.geometry.dispose();
+      state.pointTexture.dispose();
+      state.material.dispose();
+      state.renderer.dispose();
+      pointcloudScenes[side] = null;
+    }
+
+    function createPointTexture(THREE) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 64;
+      canvas.height = 64;
+      const context = canvas.getContext("2d");
+      context.fillStyle = "#fff";
+      context.beginPath();
+      context.arc(32, 32, 29, 0, Math.PI * 2);
+      context.fill();
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.minFilter = THREE.LinearFilter;
+      texture.magFilter = THREE.LinearFilter;
+      texture.generateMipmaps = false;
+      return texture;
+    }
+
+    async function renderPointcloud(side, path, label) {
+      const container = pointcloudContainers[side];
+      const requestId = ++pointcloudRequests[side];
+      disposePointcloud(side);
+      container.replaceChildren();
+
+      if (!(await assetExists(path))) {
+        if (pointcloudRequests[side] !== requestId) return;
+        container.innerHTML = placeholder(
+          "fas fa-cube",
+          `${label} unavailable`,
+        );
+        return;
+      }
+
+      try {
+        const THREE = await import("three");
+        const { OrbitControls } = await import("three/addons/controls/OrbitControls.js");
+        const { PLYLoader } = await import("three/addons/loaders/PLYLoader.js");
+        if (pointcloudRequests[side] !== requestId) return;
+
+        const geometry = await new PLYLoader().loadAsync(path);
+        if (pointcloudRequests[side] !== requestId) {
+          geometry.dispose();
+          return;
+        }
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf7f7f7);
+        const camera = new THREE.PerspectiveCamera(45, 1, 0.001, 100);
+        camera.up.set(0, 0, 1);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.replaceChildren(renderer.domElement);
+
+        geometry.computeBoundingBox();
+        const center = new THREE.Vector3();
+        geometry.boundingBox.getCenter(center);
+        geometry.translate(-center.x, -center.y, -center.z);
+        geometry.computeBoundingSphere();
+
+        const hasColor = Boolean(geometry.getAttribute("color"));
+        const pointTexture = createPointTexture(THREE);
+        const material = new THREE.PointsMaterial({
+          size: Math.max(
+            (geometry.boundingSphere?.radius || 1) * POINT_SIZE_SCALE,
+            MIN_POINT_SIZE,
+          ),
+          alphaMap: pointTexture,
+          alphaTest: 0.15,
+          vertexColors: hasColor,
+          color: hasColor ? 0xffffff : 0x333333,
+          sizeAttenuation: true,
+        });
+        const points = new THREE.Points(geometry, material);
+        scene.add(points);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.08;
+        controls.rotateSpeed = 0.55;
+        controls.zoomSpeed = 0.8;
+        controls.panSpeed = 0.7;
+        controls.screenSpacePanning = true;
+        const radius = geometry.boundingSphere?.radius || 1;
+
+        const reset = () => {
+          camera.position.set(radius * 1.6, radius * -1.6, radius * 1.2);
+          camera.near = Math.max(radius / 1000, 0.0001);
+          camera.far = radius * 100;
+          camera.updateProjectionMatrix();
+          controls.target.set(0, 0, 0);
+          controls.update();
+        };
+
+        const resize = () => {
+          const width = container.clientWidth;
+          const height = Math.max(container.clientHeight, 260);
+          renderer.setSize(width, height);
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+        };
+
+        reset();
+        resize();
+        const observer = new ResizeObserver(resize);
+        observer.observe(container);
+
+        let animationFrame;
+        const animate = () => {
+          controls.update();
+          renderer.render(scene, camera);
+          animationFrame = requestAnimationFrame(animate);
+        };
+        animate();
+
+        pointcloudScenes[side] = {
+          controls,
+          geometry,
+          material,
+          pointTexture,
+          renderer,
+          reset,
+          observer,
+          stop: () => cancelAnimationFrame(animationFrame),
+        };
+      } catch {
+        if (pointcloudRequests[side] !== requestId) return;
+        container.innerHTML = placeholder(
+          "fas fa-cube",
+          `${label} could not be loaded`,
+        );
+      }
+    }
+
+    function renderPointclouds() {
+      const task = TASKS[activeTask];
+      renderPointcloud("sim", task.pointclouds.sim, `${task.label} simulation point cloud`);
+      renderPointcloud("real", task.pointclouds.real, `${task.label} real point cloud`);
+    }
+
+    function selectTask(taskId) {
+      activeTask = taskId;
+      renderTaskTabs();
+      renderAdditionalVideos();
+      renderPointclouds();
+    }
+
+    document.querySelectorAll("[data-reset-view]").forEach((button) => {
+      button.addEventListener("click", () => {
+        pointcloudScenes[button.dataset.resetView]?.reset();
+      });
+    });
+
+    const openingPlayers = [
+      document.getElementById("opening-video-a"),
+      document.getElementById("opening-video-b"),
+    ];
+    openingPlayers.forEach((player) => {
+      player.addEventListener("ended", queueNextOpeningVideo);
+    });
+
+    window.addEventListener("beforeunload", () => {
+      Object.keys(pointcloudScenes).forEach((side) => {
+        disposePointcloud(side);
+      });
+    });
+
+    animateResultCharts();
+    openingPlayers[0].play().catch(() => {});
+    selectTask(activeTask);
+  </script>
+</body>
+</html>
